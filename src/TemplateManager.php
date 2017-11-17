@@ -4,7 +4,7 @@ class TemplateManager
 {
     public function getTemplateComputed(Template $tpl, array $data)
     {
-        if (!$tpl) {
+        if ($tpl === null) {
             throw new \RuntimeException('no tpl given');
         }
 
