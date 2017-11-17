@@ -3,6 +3,15 @@
 class TemplateManager
 {
     
+    //markup association to the processing function
+    private $_markups = array(
+        '[quote:destination_link]' => '',
+        '[quote:summary_html]' => '',
+        '[quote:summary]' => '',
+        '[quote:destination_name]' => '',
+        '[user:first_name]' => ''
+    );
+    
     private $_appContext = NULL;
     private $_quote = NULL;
     private $_user = NULL;
@@ -29,7 +38,6 @@ class TemplateManager
     
     
     private function initializeData(array $data) {
-
 
         $this->_appContext = ApplicationContext::getInstance();
         $this->_quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : NULL;
