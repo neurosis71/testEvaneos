@@ -20,7 +20,15 @@ class TemplateManager
     private $_quoteDestination = NULL;
     
     
-    
+    /**
+     * 
+     * Public function called to replace the markups in the passed template by the passed data
+     * 
+     * @param Template $tpl
+     * @param array $data
+     * @return String
+     * @throws \RuntimeException
+     */
     public function getTemplateComputed(Template $tpl, array $data)
     {
         if ($tpl === null) {
@@ -36,7 +44,13 @@ class TemplateManager
         return $replaced;
     }
     
-    
+    /**
+     * 
+     * Initialize the objects needed to process the template
+     * 
+     * @param array $data
+     * @throws \RuntimeException
+     */
     private function initializeData(array $data) {
 
         $this->_appContext = ApplicationContext::getInstance();
@@ -54,6 +68,13 @@ class TemplateManager
         }
     }
 
+    /**
+     * 
+     * Call the processing functions assigned to each markup
+     * 
+     * @param type $text
+     * @return String
+     */
     private function computeText($text)
     {
         
@@ -70,18 +91,40 @@ class TemplateManager
         return $text;
     }
     
+    /**
+     * Render the quote to HTML
+     * 
+     * @return String
+     */
     private function quoteToHtml(){
         return Quote::renderHtml($this->_quoteFromRepository);
     }
     
+     /**
+     * Render the quote to text
+     * 
+     * @return String
+     */
     private function quoteToText(){
         return Quote::renderText($this->_quoteFromRepository);
     }
     
+    /**
+     * 
+     * Return the quote destination name
+     * 
+     * @return String
+     */
     private function getDestinationName(){
         return $this->_quoteDestination->countryName;
     }
     
+    /**
+     * 
+     * Return the quote destination link
+     * 
+     * @return String
+     */
     private function getDestinationLink(){
         if ($this->_quoteDestination !== NULL) {
             return $this->_quoteSite->url . '/' . $this->_quoteDestination->countryName . '/quote/' . $this->_quoteFromRepository->id;
@@ -90,6 +133,12 @@ class TemplateManager
         }
     }
     
+    /**
+     * 
+     * Return the formatted user first name
+     * 
+     * @return String
+     */
     private function getUserFirstName(){
         if ($this->_user !== NULL) {
             return ucfirst(mb_strtolower($this->_user->firstname));
