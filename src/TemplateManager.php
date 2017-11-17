@@ -5,7 +5,7 @@ class TemplateManager
     
     //markup association to the processing function
     private $_markups = array(
-        '[quote:destination_link]' => '',
+        '[quote:destination_link]' => 'getDestinationLink',
         '[quote:summary_html]' => 'quoteToHtml',
         '[quote:summary]' => 'quoteToText',
         '[quote:destination_name]' => 'getDestinationName',
@@ -67,12 +67,6 @@ class TemplateManager
             
         }
 
-
-        if (isset($this->_quoteDestination))
-            $text = str_replace('[quote:destination_link]', $this->_quoteSite->url . '/' . $this->_quoteDestination->countryName . '/quote/' . $this->_quoteFromRepository->id, $text);
-        else
-            $text = str_replace('[quote:destination_link]', '', $text);
-
         /*
          * USER
          * [user:*]
@@ -95,5 +89,13 @@ class TemplateManager
     
     private function getDestinationName(){
         return $this->_quoteDestination->countryName;
+    }
+    
+    private function getDestinationLink(){
+        if ($this->_quoteDestination !== NULL) {
+            return $this->_quoteSite->url . '/' . $this->_quoteDestination->countryName . '/quote/' . $this->_quoteFromRepository->id;
+        } else {
+            return '';
+        }
     }
 }
