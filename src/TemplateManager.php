@@ -6,7 +6,7 @@ class TemplateManager
     //markup association to the processing function
     private $_markups = array(
         '[quote:destination_link]' => '',
-        '[quote:summary_html]' => '',
+        '[quote:summary_html]' => 'quoteToHtml',
         '[quote:summary]' => '',
         '[quote:destination_name]' => '',
         '[user:first_name]' => ''
@@ -71,17 +71,10 @@ class TemplateManager
         if ($this->_quote)
         {
 
-            $containsSummaryHtml = strpos($text, '[quote:summary_html]');
             $containsSummary     = strpos($text, '[quote:summary]');
 
-            if ($containsSummaryHtml !== false || $containsSummary !== false) {
-                if ($containsSummaryHtml !== false) {
-                    $text = str_replace(
-                        '[quote:summary_html]',
-                        Quote::renderHtml($this->_quoteFromRepository),
-                        $text
-                    );
-                }
+            if ( $containsSummary !== false) {
+
                 if ($containsSummary !== false) {
                     $text = str_replace(
                         '[quote:summary]',
@@ -109,5 +102,9 @@ class TemplateManager
         }
 
         return $text;
+    }
+    
+    private function quoteToHtml(){
+        return Quote::renderHtml($this->_quoteFromRepository);
     }
 }
