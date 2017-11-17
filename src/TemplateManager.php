@@ -8,7 +8,7 @@ class TemplateManager
         '[quote:destination_link]' => '',
         '[quote:summary_html]' => 'quoteToHtml',
         '[quote:summary]' => 'quoteToText',
-        '[quote:destination_name]' => '',
+        '[quote:destination_name]' => 'getDestinationName',
         '[user:first_name]' => ''
     );
     
@@ -66,15 +66,7 @@ class TemplateManager
             }
             
         }
-        
 
-        if ($this->_quote)
-        {
-
-            
-
-            (strpos($text, '[quote:destination_name]') !== false) and $text = str_replace('[quote:destination_name]',$this->_quoteDestination->countryName,$text);
-        }
 
         if (isset($this->_quoteDestination))
             $text = str_replace('[quote:destination_link]', $this->_quoteSite->url . '/' . $this->_quoteDestination->countryName . '/quote/' . $this->_quoteFromRepository->id, $text);
@@ -99,5 +91,9 @@ class TemplateManager
     
     private function quoteToText(){
         return Quote::renderText($this->_quoteFromRepository);
+    }
+    
+    private function getDestinationName(){
+        return $this->_quoteDestination->countryName;
     }
 }
