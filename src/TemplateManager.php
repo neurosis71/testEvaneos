@@ -56,6 +56,17 @@ class TemplateManager
 
     private function computeText($text)
     {
+        
+        foreach ($this->_markups as $markup => $processingFunction) {
+            
+            if(strpos($text, $markup)){
+                $text = str_replace(
+                        $markup, $this->$processingFunction(), $text
+                );
+            }
+            
+        }
+        
 
         if ($this->_quote)
         {
