@@ -18,28 +18,39 @@ class TemplateManager
             throw new \RuntimeException('no tpl given');
         }
 
+        $this->initializeData($data);
+        
         $replaced = clone($tpl);
-        $replaced->subject = $this->computeText($replaced->subject, $data);
-        $replaced->content = $this->computeText($replaced->content, $data);
+        $replaced->subject = $this->computeText($replaced->subject);
+        $replaced->content = $this->computeText($replaced->content);
 
         return $replaced;
     }
+    
+    
+    private function initializeData(array $data) {
 
-    private function computeText($text, array $data)
-    {
+
         $this->_appContext = ApplicationContext::getInstance();
+        $this->_quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : NULL;
+        $this->_user = (isset($data['user']) and ( $data['user'] instanceof User)) ? $data['user'] : $this->_appContext->getCurrentUser();
 
-        $this->_quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
-
-        if ($this->_quote)
-        {
+        if ($this->_quote !== NULL) {
             $this->_quoteFromRepository = QuoteRepository::getInstance()->getById($this->_quote->id);
             $this->_quoteSite = SiteRepository::getInstance()->getById($this->_quote->siteId);
             $this->_quoteDestination = DestinationRepository::getInstance()->getById($this->_quote->destinationId);
+        } else {
+            //prefere lancer une exception ne connaissant pas les spec
+            //facile a modifier si nous voulons pouvoir traiter des messages affchant seulement des donees user
+            throw new \RuntimeException('no quote given');
+        }
+    }
 
-            if(strpos($text, '[quote:destination_link]') !== false){
-                $destination = DestinationRepository::getInstance()->getById($this->_quote->destinationId);
-            }
+    private function computeText($text)
+    {
+
+        if ($this->_quote)
+        {
 
             $containsSummaryHtml = strpos($text, '[quote:summary_html]');
             $containsSummary     = strpos($text, '[quote:summary]');
@@ -73,7 +84,7 @@ class TemplateManager
          * USER
          * [user:*]
          */
-        $this->_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $this->_appContext->getCurrentUser();
+
         if($this->_user) {
             (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($this->_user->firstname)), $text);
         }
