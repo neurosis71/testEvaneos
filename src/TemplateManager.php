@@ -7,7 +7,7 @@ class TemplateManager
     private $_markups = array(
         '[quote:destination_link]' => '',
         '[quote:summary_html]' => 'quoteToHtml',
-        '[quote:summary]' => '',
+        '[quote:summary]' => 'quoteToText',
         '[quote:destination_name]' => '',
         '[user:first_name]' => ''
     );
@@ -71,18 +71,7 @@ class TemplateManager
         if ($this->_quote)
         {
 
-            $containsSummary     = strpos($text, '[quote:summary]');
-
-            if ( $containsSummary !== false) {
-
-                if ($containsSummary !== false) {
-                    $text = str_replace(
-                        '[quote:summary]',
-                        Quote::renderText($this->_quoteFromRepository),
-                        $text
-                    );
-                }
-            }
+            
 
             (strpos($text, '[quote:destination_name]') !== false) and $text = str_replace('[quote:destination_name]',$this->_quoteDestination->countryName,$text);
         }
@@ -106,5 +95,9 @@ class TemplateManager
     
     private function quoteToHtml(){
         return Quote::renderHtml($this->_quoteFromRepository);
+    }
+    
+    private function quoteToText(){
+        return Quote::renderText($this->_quoteFromRepository);
     }
 }
