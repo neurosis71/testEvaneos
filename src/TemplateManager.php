@@ -3,13 +3,13 @@
 class TemplateManager
 {
     
-    //markup association to the processing function
+    //markup association to the processing functions
     private $_markups = array(
         '[quote:destination_link]' => 'getDestinationLink',
         '[quote:summary_html]' => 'quoteToHtml',
         '[quote:summary]' => 'quoteToText',
         '[quote:destination_name]' => 'getDestinationName',
-        '[user:first_name]' => ''
+        '[user:first_name]' => 'getUserFirstName'
     );
     
     private $_appContext = NULL;
@@ -67,15 +67,6 @@ class TemplateManager
             
         }
 
-        /*
-         * USER
-         * [user:*]
-         */
-
-        if($this->_user) {
-            (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($this->_user->firstname)), $text);
-        }
-
         return $text;
     }
     
@@ -94,6 +85,14 @@ class TemplateManager
     private function getDestinationLink(){
         if ($this->_quoteDestination !== NULL) {
             return $this->_quoteSite->url . '/' . $this->_quoteDestination->countryName . '/quote/' . $this->_quoteFromRepository->id;
+        } else {
+            return '';
+        }
+    }
+    
+    private function getUserFirstName(){
+        if ($this->_user !== NULL) {
+            return ucfirst(mb_strtolower($this->_user->firstname));
         } else {
             return '';
         }
